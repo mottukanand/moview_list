@@ -1,22 +1,19 @@
 import * as React from "react";
-import {
-  TextField,
-  Button,
-} from "@material-ui/core";
+import { TextField, Button } from "@material-ui/core";
 import { MovieDetailsContext } from "context/movieContext";
 
 function MovieCreate() {
   const movieContext = React.useContext(MovieDetailsContext);
 
   const [movieName, setMovieName] = React.useState("");
-  const [movieDuration, setMovieDuration] = React.useState(0);
-  const [movieRating, setMovieRating] = React.useState(0);
+  const [movieDuration, setMovieDuration] = React.useState(null);
+  const [movieRating, setMovieRating] = React.useState(null);
 
   const handleNameChange = (e) => {
     const { value } = e.target;
-    const re = /^[A-Za-z]+$/;
+    const re = /^[aA-zZ\s]+$/;
     if (value === "" || re.test(value)) {
-      setMovieName(value);
+      setMovieName(value.trimStart());
     }
   };
 
@@ -53,12 +50,16 @@ function MovieCreate() {
       <TextField
         required
         error={false}
-        style={{ width: "200px", margin: "5px" }}
+        style={{ width: "200px", margin: "10px" }}
         type="number"
         label="Duration"
         variant="outlined"
         value={movieDuration}
-        onChange={(e) => setMovieDuration(e.target.value)}
+        onChange={(e) =>
+          e.target.value >= 0 && setMovieDuration(e.target.value)
+        }
+        placeholder="Duration: minute"
+        helperText="*Enter in minutes"
       />
       <br />
       <TextField
@@ -69,8 +70,13 @@ function MovieCreate() {
         label="Rating"
         variant="outlined"
         value={movieRating}
-        onChange={(e) => setMovieRating(e.target.value)}
-        helperText="Some important text"
+        onChange={(e) =>
+          e.target.value >= 0 &&
+          e.target.value <= 100 &&
+          setMovieRating(e.target.value)
+        }
+        placeholder="Rating: x/100"
+        helperText="*Maximum rating value is 100"
       />
       <br />
       <Button

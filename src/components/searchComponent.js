@@ -15,7 +15,11 @@ function MovieSearch() {
 
   const handleSearch = () => {
     if (searchValue) {
-      let data = movieData.filter((val) => val.name.includes(searchValue));
+      let data = movieData.filter(
+        (val) =>
+          val.name &&
+          val.name.toLowerCase().includes(searchValue.toLocaleLowerCase())
+      );
       movieContext.setMovieData(data);
     } else {
       movieContext.setMovieData(initialMovieData);

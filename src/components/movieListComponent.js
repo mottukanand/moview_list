@@ -11,12 +11,21 @@ import { MovieDetailsContext } from "context/movieContext";
 function MovieList() {
   const movieContext = React.useContext(MovieDetailsContext);
   const { movieData } = movieContext;
+
+  const convertMinuteToHours = (minutes) => {
+    try {
+      var Hours = (minutes / 60).toFixed(2);
+      return Hours;
+    } catch (err) {
+      return 0;
+    }
+  };
   return (
     <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
       {movieData && movieData.length ? (
-        movieData.map((movie) => (
+        movieData.map((movie, index) => (
           <>
-            <ListItem alignItems="flex-start">
+            <ListItem alignItems="flex-start" key={index}>
               <ListItemAvatar>
                 <Avatar alt={movie.name} src="/static/images/avatar/1.jpg" />
               </ListItemAvatar>
@@ -29,15 +38,25 @@ function MovieList() {
                       component="span"
                       variant="body2"
                       color="text.primary"
+                      mr={3}
                     >
-                      {`${movie.duration} h`}
+                      {`Duration: ${convertMinuteToHours(movie.duration)} h`}
                     </Typography>
-                    {` --- ${movie.rating}/100`}
+                    <Typography
+                      sx={{ display: "inline" }}
+                      component="span"
+                      variant="body2"
+                      color="text.primary"
+                    >
+                      {`Rating: ${movie.rating}/100`}
+                    </Typography>
                   </React.Fragment>
                 }
               />
             </ListItem>
-            <Divider variant="inset" component="li" />
+            {index !== movieData.length - 1 ? (
+              <Divider variant="inset" component="li" />
+            ) : null}
           </>
         ))
       ) : (
